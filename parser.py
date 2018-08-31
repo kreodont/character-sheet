@@ -72,6 +72,7 @@ class Character:
             return object.__getattribute__(self, 'xml')
 
         print(f'Searching attribute "{item}"')
+        print(dir(self.xml.find('character').find(item)))
         return translate_from_iso_codes(self.xml.find('character').find(item).text)
 
     def __init__(self, xml_elements_tree: ElementTree):
