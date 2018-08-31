@@ -1,4 +1,5 @@
 import re
+import xml.etree.ElementTree as ElementTree
 
 
 def translate_to_iso_codes(text):
@@ -21,9 +22,9 @@ def translate_to_iso_codes(text):
     return result_text
 
 
-def translate_from_iso_codes(text):
+def translate_from_iso_codes(text: str) -> str:
     if isinstance(text, int):
-        return text
+        return str(text)
 
     russian_letters = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя'
     for letter in text:
@@ -65,10 +66,28 @@ def translate_from_iso_codes(text):
     return output_text
 
 
-def parse_xml(filename: str) -> str:
+class Character:
+    def __getattribute__(self, item: str):
+        if item == 'xml':
+            return object.__getattribute__(self, 'xml')
+
+        print(f'Searching attribute "{item}"')
+        return translate_from_iso_codes(self.xml.find('character').find(item).text)
+
+    def __init__(self, xml_elements_tree: ElementTree):
+        self.xml = xml_elements_tree
+
+
+def parse_xml_file(filename: str) -> ElementTree:
     with open(filename) as xml_file:
-        return translate_from_iso_codes(xml_file.read())
+        xml_text = xml_file.read()
+        if not xml_text:
+            raise Exception('Empty XML provided')
+
+        return ElementTree.fromstring(xml_text)
 
 
 if __name__ == '__main__':
-    print(parse_xml('Leila1.xml'))
+    character = Character(parse_xml_file('Leila1.xml'))
+    print(character.background)
+    # print(parse_xml_file('Leila1.xml'))
