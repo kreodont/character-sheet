@@ -1,6 +1,11 @@
 import re
 import xml.etree.ElementTree as ElementTree
 from collections import namedtuple
+import io
+import pdfrw
+from reportlab.pdfgen import canvas
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 
 def straight_translate(filename: str) -> None:
@@ -39,6 +44,71 @@ def translate_to_iso_codes(text: str) -> str:
             result_text += char
 
     return result_text
+
+
+def run_pdf_creation(character_name, template_filename='character_sheet.pdf'):
+    character = Character(f'{character_name}.xml')
+    print(f'Character "{character.xml.name}" loaded')
+    canvas_data = get_overlay_canvas(character)
+    form = merge(canvas_data, template_path=template_filename)
+    with open(f'{character_name}.pdf', 'wb') as f:
+        f.write(form.read())
+
+
+def write_in_pdf(value, pdf, element_name):
+    known_elements_dictionary = {
+        'name': {'x': 150, 'y': 715, 'size': 26, 'limit': 10},
+        'strength': {'x': 60, 'y': 615, 'size': 28, 'limit': 2, 'plus_minus': True},
+        'strength.value': {'x': 59, 'y': 595, 'size': 14, 'limit': 2},
+        'dexterity': {'x': 60, 'y': 543, 'size': 28, 'limit': 2, 'plus_minus': True},
+        'dexterity.value': {'x': 59, 'y': 523, 'size': 14, 'limit': 2},
+        'constitution': {'x': 60, 'y': 471, 'size': 28, 'limit': 2, 'plus_minus': True},
+        'constitution.value': {'x': 59, 'y': 451, 'size': 14, 'limit': 2},
+    }
+    font_size = known_elements_dictionary[element_name]['size']
+    if 'plus_minus' in known_elements_dictionary[element_name] and known_elements_dictionary[element_name]['plus_minus'] is True:
+        if int(value) > 0:
+            value = '+' + value
+
+    if len(value) > known_elements_dictionary[element_name]['limit']:
+        font_size = font_size // (len(value) / known_elements_dictionary[element_name]['limit'])
+
+    if font_size < 5:
+        font_size = 5
+
+    known_elements_dictionary[element_name]['x'] -= len(value) * font_size // 3  # Centring
+
+    print(f'Font size: {font_size}')
+    pdf.setFont('FreeSans', font_size)
+    pdf.drawString(x=known_elements_dictionary[element_name]['x'], y=known_elements_dictionary[element_name]['y'], text=value)
+
+
+def get_overlay_canvas(character: "Character") -> io.BytesIO:
+    data = io.BytesIO()
+    pdf = canvas.Canvas(data)
+    pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
+    write_in_pdf(character.xml.name, pdf, 'name')
+    write_in_pdf(character.xml.abilities.strength.bonus, pdf, 'strength')
+    write_in_pdf(character.xml.abilities.strength.score, pdf, 'strength.value')
+    write_in_pdf(character.xml.abilities.dexterity.bonus, pdf, 'dexterity')
+    write_in_pdf(character.xml.abilities.dexterity.score, pdf, 'dexterity.value')
+    write_in_pdf(character.xml.abilities.constitution.bonus, pdf, 'constitution')
+    write_in_pdf(character.xml.abilities.constitution.score, pdf, 'constitution.value')
+    pdf.save()
+    data.seek(0)
+    return data
+
+
+def merge(overlay_canvas: io.BytesIO, template_path: str) -> io.BytesIO:
+    template_pdf = pdfrw.PdfReader(template_path)
+    overlay_pdf = pdfrw.PdfReader(overlay_canvas)
+    for page, data in zip(template_pdf.pages, overlay_pdf.pages):
+        overlay = pdfrw.PageMerge().add(data)[0]
+        pdfrw.PageMerge(page).add(overlay).render()
+    form = io.BytesIO()
+    pdfrw.PdfWriter().write(form, template_pdf)
+    form.seek(0)
+    return form
 
 
 def translate_from_iso_codes(text: str) -> str:
@@ -119,6 +189,7 @@ class Character:
 
 
 if __name__ == '__main__':
-    straight_translate('Leila1.xml')
+    # straight_translate('Leila1.xml')
     # character = Character('Leila1.xml')
     # print(character.xml.abilities.strength.score)
+    run_pdf_creation('Leila')
