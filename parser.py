@@ -1,8 +1,9 @@
 import re
 import xml.etree.ElementTree as ElementTree
+from collections import namedtuple
 
 
-def translate_to_iso_codes(text):
+def translate_to_iso_codes(text: str) -> str:
     first_letter_code = 192
     all_letters = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя'
     result_text = ''
@@ -25,6 +26,9 @@ def translate_to_iso_codes(text):
 def translate_from_iso_codes(text: str) -> str:
     if isinstance(text, int):
         return str(text)
+
+    if not text:
+        return ''
 
     russian_letters = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя'
     for letter in text:
@@ -67,28 +71,35 @@ def translate_from_iso_codes(text: str) -> str:
 
 
 class Character:
-    def __getattribute__(self, item: str):
-        if item == 'xml':
-            return object.__getattribute__(self, 'xml')
+    @staticmethod
+    def element_to_dict(element):
+        dict_to_return = {}
+        if element.tag == 'class':
+            element.tag = 'class_'
 
-        print(f'Searching attribute "{item}"')
-        print(dir(self.xml.find('character').find(item)))
-        return translate_from_iso_codes(self.xml.find('character').find(item).text)
+        element.tag = element.tag.replace('-', '_')
 
-    def __init__(self, xml_elements_tree: ElementTree):
-        self.xml = xml_elements_tree
+        if list(element):  # if it has children
+            for e in list(element):
+                dict_to_return[e.tag] = Character.element_to_dict(e)
+        else:
+            dict_to_return[element.tag] = translate_from_iso_codes(element.text)
+        return dict_to_return
 
+    def __init__(self, filename: str):
+        self.xml = Character.convert(Character.element_to_dict(ElementTree.parse(filename).getroot())['character'])
 
-def parse_xml_file(filename: str) -> ElementTree:
-    with open(filename) as xml_file:
-        xml_text = xml_file.read()
-        if not xml_text:
-            raise Exception('Empty XML provided')
+    @staticmethod
+    def convert(dictionary: dict):
+        for key, value in dictionary.items():
+            if isinstance(value, dict):
+                dictionary[key] = Character.convert(value)
+            else:
+                return value
 
-        return ElementTree.fromstring(xml_text)
+        return namedtuple('GenericDict', dictionary.keys())(**dictionary)
 
 
 if __name__ == '__main__':
-    character = Character(parse_xml_file('Leila1.xml'))
-    print(character.background)
-    # print(parse_xml_file('Leila1.xml'))
+    character = Character('Leila1.xml')
+    print(character.xml.abilities.strength.score)
