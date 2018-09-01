@@ -3,6 +3,24 @@ import xml.etree.ElementTree as ElementTree
 from collections import namedtuple
 
 
+def straight_translate(filename: str) -> None:
+    """
+    For using https://www.alonlinetools.net/FGCharacterSheet.aspx
+    Doesn't work for now
+    :param filename: xml file exported from Fantasy Grounds
+    :return: New xml file created
+    """
+    with open(f'translated_{filename}', 'w', encoding='utf-8') as output_file:
+        with open(filename) as input_file:
+            text = input_file.read()
+            text = text.replace('<?', '<\!').replace('?>', '\!>')  # to save xml tags
+            # text = text.replace('iso-8859-1', 'utf-8')
+            text = translate_from_iso_codes(text)
+            print(text)
+            text = text.replace('<\!', '<?').replace('\!>', '?>')  # restoring xml tags
+            output_file.write(text)
+
+
 def translate_to_iso_codes(text: str) -> str:
     first_letter_code = 192
     all_letters = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя'
@@ -72,7 +90,7 @@ def translate_from_iso_codes(text: str) -> str:
 
 class Character:
     @staticmethod
-    def element_to_dict(element):
+    def element_to_dict(element: ElementTree.Element) -> dict:
         dict_to_return = {}
         if element.tag == 'class':
             element.tag = 'class_'
@@ -101,5 +119,6 @@ class Character:
 
 
 if __name__ == '__main__':
-    character = Character('Leila1.xml')
-    print(character.xml.abilities.strength.score)
+    straight_translate('Leila1.xml')
+    # character = Character('Leila1.xml')
+    # print(character.xml.abilities.strength.score)
