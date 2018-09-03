@@ -134,7 +134,17 @@ def write_in_pdf(value, pdf, element_name):
         'total_dice':               {'x': 255, 'y': 466, 'size': 10, 'limit': 2},
         'dice':                     {'x': 270, 'y': 450, 'size': 10, 'limit': 15},
         'magic1':                   {'x': 330, 'y': 335, 'size': 10, 'limit': 40},
-        'magic2':                   {'x': 330, 'y': 323, 'size': 10, 'limit': 40},
+        'magic2':                   {'x': 335, 'y': 323, 'size': 7, 'limit': 60},
+        'magic3':                   {'x': 330, 'y': 312, 'size': 10, 'limit': 40},
+        'magic4':                   {'x': 330, 'y': 302, 'size': 7, 'limit': 60},
+        'magic5':                   {'x': 335, 'y': 290, 'size': 6, 'limit': 60},
+        'magic6':                   {'x': 330, 'y': 279, 'size': 6, 'limit': 60},
+        'magic7':                   {'x': 332, 'y': 268, 'size': 6, 'limit': 60},
+        'magic8':                   {'x': 330, 'y': 258, 'size': 8, 'limit': 60},
+        'magic9':                   {'x': 330, 'y': 246, 'size': 10, 'limit': 40},
+        'magic10':                  {'x': 330, 'y': 234, 'size': 10, 'limit': 40},
+        'magic11':                  {'x': 330, 'y': 222, 'size': 10, 'limit': 40},
+
         'weapon0.name':             {'x': 260, 'y': 390, 'size': 10, 'limit': 12},
         'weapon1.name':             {'x': 260, 'y': 370, 'size': 10, 'limit': 12},
         'weapon2.name':             {'x': 260, 'y': 350, 'size': 10, 'limit': 12},
@@ -268,7 +278,10 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     class_level_string = class_level_string[2:]
     write_in_pdf(class_level_string, pdf, 'class_level')
     write_in_pdf(character.xml.race, pdf, 'race')
-    write_in_pdf(character.xml.alignment, pdf, 'alignment')
+    try:
+        write_in_pdf(character.xml.alignment, pdf, 'alignment')
+    except AttributeError:
+        pass
     write_in_pdf(character.xml.background, pdf, 'background')
     write_in_pdf(character.xml.hp.total, pdf, 'hp_max')
     write_in_pdf(str(len(dice)), pdf, 'total_dice')
@@ -278,7 +291,21 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         magic_attacks_modifier = '+' + str(magic_attacks_modifier)
 
     write_in_pdf(f'Модификатор магических атак: {magic_attacks_modifier}', pdf, 'magic1')
-    write_in_pdf(f'Сложность спасброска: {10 + int(character.xml.abilities.intelligence.bonus)}', pdf, 'magic2')
+    write_in_pdf(f'Бонус мастерства ({character.xml.profbonus}) + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic2')
+    write_in_pdf(f'Сложность спасброска: {10 + int(character.xml.abilities.intelligence.bonus)}', pdf, 'magic3')
+    write_in_pdf(f'10 + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic4')
+    write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение оружием +', pdf, 'magic5')
+    write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если оружие фехтовальное', pdf, 'magic6')
+    write_in_pdf(f'Урон: Модификатор Силы ({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если оружие фехтовальное', pdf, 'magic7')
+
+    dexterity_included = character.xml.abilities.dexterity.bonus
+    try:
+        if character.xml.defenses.ac.dexbonus == 'no':
+            dexterity_included = 'no'
+    except AttributeError:
+        pass
+
+    write_in_pdf(f'КД: Осн(10) + Броня({character.xml.defenses.ac.armor}) + Ловк({dexterity_included}) + Щит({character.xml.defenses.ac.shield})', pdf, 'magic8')
 
     damage_translations_dict = {'slashing':     'рубящий',
                                 'piercing':     'колющий',
@@ -427,4 +454,4 @@ if __name__ == '__main__':
     # straight_translate('Leila1.xml')
     # character = Character('Leila1.xml')
     # print(character.xml.abilities.strength.score)
-    run_pdf_creation('Satar')
+    run_pdf_creation('Leila')
