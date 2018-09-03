@@ -126,14 +126,24 @@ def write_in_pdf(value, pdf, element_name):
         'armor':                    {'x': 248, 'y': 640, 'size': 14, 'limit': 2},
         'initiative':               {'x': 301, 'y': 640, 'size': 14, 'limit': 2, 'plus_minus': True},
         'speed':                    {'x': 361, 'y': 640, 'size': 14, 'limit': 2},
-        'class_level':              {'x': 305, 'y': 730, 'size': 10, 'limit': 20},
+        'class_level':              {'x': 305, 'y': 730, 'size': 10, 'limit': 15},
         'race':                     {'x': 290, 'y': 704, 'size': 10, 'limit': 20},
+        'alignment':                {'x': 410, 'y': 704, 'size': 10, 'limit': 20},
         'background':               {'x': 410, 'y': 730, 'size': 10, 'limit': 20},
         'hp_max':                   {'x': 300, 'y': 587, 'size': 10, 'limit': 3},
         'total_dice':               {'x': 255, 'y': 466, 'size': 10, 'limit': 2},
-        'dice':                     {'x': 260, 'y': 450, 'size': 10, 'limit': 20},
+        'dice':                     {'x': 270, 'y': 450, 'size': 10, 'limit': 15},
         'magic1':                   {'x': 330, 'y': 335, 'size': 10, 'limit': 40},
         'magic2':                   {'x': 330, 'y': 323, 'size': 10, 'limit': 40},
+        'weapon0.name':             {'x': 260, 'y': 390, 'size': 10, 'limit': 12},
+        'weapon1.name':             {'x': 260, 'y': 370, 'size': 10, 'limit': 12},
+        'weapon2.name':             {'x': 260, 'y': 350, 'size': 10, 'limit': 12},
+        'weapon0.attack':           {'x': 305, 'y': 390, 'size': 10, 'limit': 12, 'plus_minus': True},
+        'weapon1.attack':           {'x': 305, 'y': 370, 'size': 10, 'limit': 12, 'plus_minus': True},
+        'weapon2.attack':           {'x': 305, 'y': 350, 'size': 10, 'limit': 12, 'plus_minus': True},
+        'weapon0.damage':           {'x': 370, 'y': 390, 'size': 10, 'limit': 12},
+        'weapon1.damage':           {'x': 370, 'y': 370, 'size': 10, 'limit': 12},
+        'weapon2.damage':           {'x': 370, 'y': 350, 'size': 10, 'limit': 12},
     }
     font_size = known_elements_dictionary[element_name]['size']
     if 'plus_minus' in known_elements_dictionary[element_name] and known_elements_dictionary[element_name]['plus_minus'] is True:
@@ -190,61 +200,61 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     write_in_pdf(character.xml.abilities.wisdom.save, pdf, 'wisdom.save')
     write_in_pdf(character.xml.abilities.charisma.save, pdf, 'charisma.save')
 
-    if character.xml.skilllist.id_00009.prof == '1':
+    if character.xml.skilllist.acrobatics.prof == '1':
         write_in_pdf('v', pdf, 'acrobatics.prof')
-    if character.xml.skilllist.id_00003.prof == '1':
+    if character.xml.skilllist.investigation.prof == '1':
         write_in_pdf('v', pdf, 'investigation.prof')
-    if character.xml.skilllist.id_00011.prof == '1':
+    if character.xml.skilllist.athletics.prof == '1':
         write_in_pdf('v', pdf, 'athletic.prof')
-    if character.xml.skilllist.id_00001.prof == '1':
+    if character.xml.skilllist.perception.prof == '1':
         write_in_pdf('v', pdf, 'perception.prof')
-    if character.xml.skilllist.id_00007.prof == '1':
+    if character.xml.skilllist.survival.prof == '1':
         write_in_pdf('v', pdf, 'survival.prof')
-    if character.xml.skilllist.id_00008.prof == '1':
+    if character.xml.skilllist.performance.prof == '1':
         write_in_pdf('v', pdf, 'performance.prof')
-    if character.xml.skilllist.id_00014.prof == '1':
+    if character.xml.skilllist.intimidation.prof == '1':
         write_in_pdf('v', pdf, 'intimidation.prof')
-    if character.xml.skilllist.id_00017.prof == '1':
+    if character.xml.skilllist.history.prof == '1':
         write_in_pdf('v', pdf, 'history.prof')
-    if character.xml.skilllist.id_00012.prof == '1':
+    if character.xml.skilllist.sleight_of_hand.prof == '1':
         write_in_pdf('v', pdf, 'sleight_of_hand.prof')
-    if character.xml.skilllist.id_00002.prof == '1':
+    if character.xml.skilllist.arcana.prof == '1':
         write_in_pdf('v', pdf, 'arcana.prof')
-    if character.xml.skilllist.id_00006.prof == '1':
+    if character.xml.skilllist.medicine.prof == '1':
         write_in_pdf('v', pdf, 'medicine.prof')
-    if character.xml.skilllist.id_00015.prof == '1':
+    if character.xml.skilllist.deception.prof == '1':
         write_in_pdf('v', pdf, 'deception.prof')
-    if character.xml.skilllist.id_00005.prof == '1':
+    if character.xml.skilllist.nature.prof == '1':
         write_in_pdf('v', pdf, 'nature.prof')
-    if character.xml.skilllist.id_00013.prof == '1':
+    if character.xml.skilllist.insight.prof == '1':
         write_in_pdf('v', pdf, 'insight.prof')
-    if character.xml.skilllist.id_00010.prof == '1':
+    if character.xml.skilllist.religion.prof == '1':
         write_in_pdf('v', pdf, 'religion.prof')
-    if character.xml.skilllist.id_00016.prof == '1':
+    if character.xml.skilllist.stealth.prof == '1':
         write_in_pdf('v', pdf, 'stealth.prof')
-    if character.xml.skilllist.id_00004.prof == '1':
+    if character.xml.skilllist.persuasion.prof == '1':
         write_in_pdf('v', pdf, 'persuasion.prof')
-    if character.xml.skilllist.id_00018.prof == '1':
+    if character.xml.skilllist.animal_handling.prof == '1':
         write_in_pdf('v', pdf, 'animal_handling.prof')
         
-    write_in_pdf(character.xml.skilllist.id_00009.total, pdf, 'acrobatics')
-    write_in_pdf(character.xml.skilllist.id_00003.total, pdf, 'investigation')
-    write_in_pdf(character.xml.skilllist.id_00011.total, pdf, 'athletic')
-    write_in_pdf(character.xml.skilllist.id_00001.total, pdf, 'perception')
-    write_in_pdf(character.xml.skilllist.id_00007.total, pdf, 'survival')
-    write_in_pdf(character.xml.skilllist.id_00008.total, pdf, 'performance')
-    write_in_pdf(character.xml.skilllist.id_00014.total, pdf, 'intimidation')
-    write_in_pdf(character.xml.skilllist.id_00017.total, pdf, 'history')
-    write_in_pdf(character.xml.skilllist.id_00012.total, pdf, 'sleight_of_hand')
-    write_in_pdf(character.xml.skilllist.id_00002.total, pdf, 'arcana')
-    write_in_pdf(character.xml.skilllist.id_00006.total, pdf, 'medicine')
-    write_in_pdf(character.xml.skilllist.id_00015.total, pdf, 'deception')
-    write_in_pdf(character.xml.skilllist.id_00005.total, pdf, 'nature')
-    write_in_pdf(character.xml.skilllist.id_00013.total, pdf, 'insight')
-    write_in_pdf(character.xml.skilllist.id_00010.total, pdf, 'religion')
-    write_in_pdf(character.xml.skilllist.id_00016.total, pdf, 'stealth')
-    write_in_pdf(character.xml.skilllist.id_00004.total, pdf, 'persuasion')
-    write_in_pdf(character.xml.skilllist.id_00018.total, pdf, 'animal_handling')
+    write_in_pdf(character.xml.skilllist.acrobatics.total, pdf, 'acrobatics')
+    write_in_pdf(character.xml.skilllist.investigation.total, pdf, 'investigation')
+    write_in_pdf(character.xml.skilllist.athletics.total, pdf, 'athletic')
+    write_in_pdf(character.xml.skilllist.perception.total, pdf, 'perception')
+    write_in_pdf(character.xml.skilllist.survival.total, pdf, 'survival')
+    write_in_pdf(character.xml.skilllist.performance.total, pdf, 'performance')
+    write_in_pdf(character.xml.skilllist.intimidation.total, pdf, 'intimidation')
+    write_in_pdf(character.xml.skilllist.history.total, pdf, 'history')
+    write_in_pdf(character.xml.skilllist.sleight_of_hand.total, pdf, 'sleight_of_hand')
+    write_in_pdf(character.xml.skilllist.arcana.total, pdf, 'arcana')
+    write_in_pdf(character.xml.skilllist.medicine.total, pdf, 'medicine')
+    write_in_pdf(character.xml.skilllist.deception.total, pdf, 'deception')
+    write_in_pdf(character.xml.skilllist.nature.total, pdf, 'nature')
+    write_in_pdf(character.xml.skilllist.insight.total, pdf, 'insight')
+    write_in_pdf(character.xml.skilllist.religion.total, pdf, 'religion')
+    write_in_pdf(character.xml.skilllist.stealth.total, pdf, 'stealth')
+    write_in_pdf(character.xml.skilllist.persuasion.total, pdf, 'persuasion')
+    write_in_pdf(character.xml.skilllist.animal_handling.total, pdf, 'animal_handling')
 
     write_in_pdf(character.xml.defenses.ac.total, pdf, 'armor')
     write_in_pdf(character.xml.initiative.total, pdf, 'initiative')
@@ -253,11 +263,12 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     dice = []
     for class_ in character.xml.classes:
         class_level_string += f', {class_.name} {class_.level}'
-        dice.append(class_.hddie)
+        dice.extend(str((class_.hddie + ' ') * int(class_.level)).split())
 
     class_level_string = class_level_string[2:]
     write_in_pdf(class_level_string, pdf, 'class_level')
     write_in_pdf(character.xml.race, pdf, 'race')
+    write_in_pdf(character.xml.alignment, pdf, 'alignment')
     write_in_pdf(character.xml.background, pdf, 'background')
     write_in_pdf(character.xml.hp.total, pdf, 'hp_max')
     write_in_pdf(str(len(dice)), pdf, 'total_dice')
@@ -268,6 +279,43 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
 
     write_in_pdf(f'Модификатор магических атак: {magic_attacks_modifier}', pdf, 'magic1')
     write_in_pdf(f'Сложность спасброска: {10 + int(character.xml.abilities.intelligence.bonus)}', pdf, 'magic2')
+
+    damage_translations_dict = {'slashing':     'рубящий',
+                                'piercing':     'колющий',
+                                'bludgeoning':  'дробящий',
+                                'cold':         'холод',
+                                'acid':         'кислота',
+                                'fire':         'огонь',
+                                'magic':        'магический',
+                                'poison':       'яд',
+
+                                }
+    weapons = character.xml.weaponlist
+
+    for number, weapon in enumerate(weapons):
+        if number > 2:
+            break
+        damage_type = damage_translations_dict[weapon.damagelist[0].type] if weapon.damagelist[0].type in damage_translations_dict else weapon.damagelist[0].type
+
+        attack_bonus = 0
+        damage_bonus = 0
+        if weapon.prof == '1':
+            attack_bonus += int(character.xml.profbonus)
+
+        if 'finesse' in weapon.properties.lower():
+            attack_bonus += max(int(character.xml.abilities.strength.bonus), int(character.xml.abilities.dexterity.bonus))
+            damage_bonus += max(int(character.xml.abilities.strength.bonus), int(character.xml.abilities.dexterity.bonus))
+        else:
+            attack_bonus += int(character.xml.abilities.strength.bonus)
+            damage_bonus += int(character.xml.abilities.strength.bonus)
+        if damage_bonus > 0:
+            damage_bonus = '+' + str(damage_bonus)
+        elif damage_bonus == 0:
+            damage_bonus = ''
+
+        write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
+        write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
+        write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
     pdf.save()
     data.seek(0)
@@ -340,6 +388,18 @@ class Character:
         if element.tag == 'class':
             element.tag = 'class_'
 
+        if element.tag.startswith('id-'):
+            name_child = [e for e in element if e.tag == 'name']
+            if name_child:
+                element.tag = translate_from_iso_codes(name_child[0].text).\
+                    lower().\
+                    replace(' ', '_').\
+                    replace('-', '_').\
+                    replace('(', '').\
+                    replace(')', '').\
+                    replace(':', '').\
+                    replace(',', '').\
+                    replace('.', '')
         element.tag = element.tag.replace('-', '_')
 
         if list(element):  # if it has children
