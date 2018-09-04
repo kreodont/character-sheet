@@ -154,6 +154,9 @@ def write_in_pdf(value, pdf, element_name):
         'weapon0.damage':           {'x': 370, 'y': 390, 'size': 10, 'limit': 12},
         'weapon1.damage':           {'x': 370, 'y': 370, 'size': 10, 'limit': 12},
         'weapon2.damage':           {'x': 370, 'y': 350, 'size': 10, 'limit': 12},
+
+        'feature1':                 {'x': 500, 'y': 390, 'size': 10, 'limit': 12},
+
     }
     font_size = known_elements_dictionary[element_name]['size']
     if 'plus_minus' in known_elements_dictionary[element_name] and known_elements_dictionary[element_name]['plus_minus'] is True:
@@ -344,6 +347,10 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
         write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
+        for feature in character.xml.featurelist:
+            print(feature)
+            print('\n')
+
     pdf.save()
     data.seek(0)
     return data
@@ -454,4 +461,4 @@ if __name__ == '__main__':
     # straight_translate('Leila1.xml')
     # character = Character('Leila1.xml')
     # print(character.xml.abilities.strength.score)
-    run_pdf_creation('Leila')
+    run_pdf_creation('Satar')
