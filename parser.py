@@ -390,17 +390,31 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
             damage_bonus = '+' + str(damage_bonus)
         elif damage_bonus == 0:
             damage_bonus = ''
+        damage_dice_string = ''
+        damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
+        for unique_dice in set(damage_dice_list):
+            if damage_dice_list.count(unique_dice) == 1:
+                damage_dice_string += f'{unique_dice} + '
+            else:
+                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice} + '
+
+        damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
 
         write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
         write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
-        write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
+        write_in_pdf(f'{damage_dice_string}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
+    feature_list_position = 0
     for number, feature in enumerate(character.xml.featurelist, 1):
+        feature_list_position += 1
         try:
             level = feature.level
         except AttributeError:
             level = ''
         write_in_pdf(f'{feature.name} (от {feature.source} {level})', pdf, f'feature{number * 2 - 1}')
+
+    for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
+        write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
 
     language_translation_dict = {'Common': 'Общий', 'Dwarvish': 'Дворфский', 'Elvish': 'Эльфийский'}
     for number, language in enumerate(character.xml.languagelist, 1):
@@ -517,5 +531,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Satar6')
+    run_pdf_creation('Satar')
     # straight_translate('Satar.xml')
