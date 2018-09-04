@@ -396,7 +396,6 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
     for number, feature in enumerate(character.xml.featurelist, 1):
-        print(feature)
         try:
             level = feature.level
         except AttributeError:
