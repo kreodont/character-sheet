@@ -157,39 +157,39 @@ def write_in_pdf(value, pdf, element_name):
 
         'feature1':                 {'x': 410, 'y': 400, 'size': 10, 'limit': 30, 'dont_center': True},
         'feature2':                 {'x': 410, 'y': 390, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature3':                 {'x': 410, 'y': 380, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature4':                 {'x': 410, 'y': 370, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature5':                 {'x': 410, 'y': 360, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature6':                 {'x': 410, 'y': 350, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature7':                 {'x': 410, 'y': 340, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature8':                 {'x': 410, 'y': 330, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature9':                 {'x': 410, 'y': 320, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature10':                {'x': 410, 'y': 310, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature11':                {'x': 410, 'y': 300, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature12':                {'x': 410, 'y': 290, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature13':                {'x': 410, 'y': 280, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature14':                {'x': 410, 'y': 270, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature15':                {'x': 410, 'y': 260, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature16':                {'x': 410, 'y': 250, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature17':                {'x': 410, 'y': 240, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature18':                {'x': 410, 'y': 230, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature19':                {'x': 410, 'y': 220, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature20':                {'x': 410, 'y': 210, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature21':                {'x': 410, 'y': 200, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature22':                {'x': 410, 'y': 190, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature23':                {'x': 410, 'y': 180, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature24':                {'x': 410, 'y': 170, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature25':                {'x': 410, 'y': 160, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature26':                {'x': 410, 'y': 150, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature27':                {'x': 410, 'y': 140, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature28':                {'x': 410, 'y': 130, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature29':                {'x': 410, 'y': 120, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature30':                {'x': 410, 'y': 110, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature31':                {'x': 410, 'y': 100, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature32':                {'x': 410, 'y': 90, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature33':                {'x': 410, 'y': 80, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature34':                {'x': 410, 'y': 70, 'size': 10, 'limit': 30, 'dont_center': True},
-        'feature35':                {'x': 410, 'y': 60, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature3':                 {'x': 410, 'y': 378, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature4':                 {'x': 410, 'y': 368, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature5':                 {'x': 410, 'y': 357, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature6':                 {'x': 410, 'y': 346, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature7':                 {'x': 410, 'y': 335, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature8':                 {'x': 410, 'y': 324, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature9':                 {'x': 410, 'y': 313, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature10':                {'x': 410, 'y': 302, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature11':                {'x': 410, 'y': 291, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature12':                {'x': 410, 'y': 280, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature13':                {'x': 410, 'y': 269, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature14':                {'x': 410, 'y': 258, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature15':                {'x': 410, 'y': 247, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature16':                {'x': 410, 'y': 236, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature17':                {'x': 410, 'y': 225, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature18':                {'x': 410, 'y': 214, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature19':                {'x': 410, 'y': 203, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature20':                {'x': 410, 'y': 192, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature21':                {'x': 410, 'y': 181, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature22':                {'x': 410, 'y': 170, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature23':                {'x': 410, 'y': 159, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature24':                {'x': 410, 'y': 148, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature25':                {'x': 410, 'y': 137, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature26':                {'x': 410, 'y': 126, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature27':                {'x': 410, 'y': 115, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature28':                {'x': 410, 'y': 104, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature29':                {'x': 410, 'y': 93, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature30':                {'x': 410, 'y': 82, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature31':                {'x': 410, 'y': 71, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature32':                {'x': 410, 'y': 60, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature33':                {'x': 410, 'y': 49, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature34':                {'x': 410, 'y': 38, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature35':                {'x': 410, 'y': 27, 'size': 10, 'limit': 30, 'dont_center': True},
 
         'language1':                {'x': 35, 'y': 160, 'size': 10, 'limit': 30, 'dont_center': True},
         'language2':                {'x': 35, 'y': 149, 'size': 10, 'limit': 30, 'dont_center': True},
@@ -396,7 +396,12 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
     for number, feature in enumerate(character.xml.featurelist, 1):
-        write_in_pdf(feature.name, pdf, f'feature{number}')
+        print(feature)
+        try:
+            level = feature.level
+        except AttributeError:
+            level = ''
+        write_in_pdf(f'{feature.name} (от {feature.source} {level})', pdf, f'feature{number * 2 - 1}')
 
     language_translation_dict = {'Common': 'Общий', 'Dwarvish': 'Дворфский', 'Elvish': 'Эльфийский'}
     for number, language in enumerate(character.xml.languagelist, 1):
@@ -513,5 +518,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Satar')
+    run_pdf_creation('Satar6')
     # straight_translate('Satar.xml')
