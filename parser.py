@@ -46,7 +46,7 @@ def translate_to_iso_codes(text: str) -> str:
     return result_text
 
 
-def run_pdf_creation(character_name, template_filename='character_sheet.pdf'):
+def run_pdf_creation(character_name, template_filename='character_sheet_light.pdf'):
     character = Character(f'{character_name}.xml')
     print(f'Character "{character.xml.name}" loaded')
     canvas_data = get_overlay_canvas(character)
@@ -126,24 +126,24 @@ def write_in_pdf(value, pdf, element_name):
         'armor':                    {'x': 248, 'y': 640, 'size': 14, 'limit': 2},
         'initiative':               {'x': 301, 'y': 640, 'size': 14, 'limit': 2, 'plus_minus': True},
         'speed':                    {'x': 361, 'y': 640, 'size': 14, 'limit': 2},
-        'class_level':              {'x': 305, 'y': 730, 'size': 10, 'limit': 15},
-        'race':                     {'x': 290, 'y': 704, 'size': 10, 'limit': 20},
-        'alignment':                {'x': 410, 'y': 704, 'size': 10, 'limit': 20},
-        'background':               {'x': 410, 'y': 730, 'size': 10, 'limit': 20},
+        'class_level':              {'x': 270, 'y': 730, 'size': 10, 'limit': 15, 'dont_center': True},
+        'race':                     {'x': 270, 'y': 704, 'size': 10, 'limit': 20, 'dont_center': True},
+        'alignment':                {'x': 380, 'y': 704, 'size': 10, 'limit': 20, 'dont_center': True},
+        'background':               {'x': 380, 'y': 730, 'size': 10, 'limit': 20, 'dont_center': True},
         'hp_max':                   {'x': 300, 'y': 587, 'size': 10, 'limit': 3},
         'total_dice':               {'x': 255, 'y': 466, 'size': 10, 'limit': 2},
-        'dice':                     {'x': 270, 'y': 450, 'size': 10, 'limit': 15},
-        'magic1':                   {'x': 330, 'y': 335, 'size': 10, 'limit': 40},
-        'magic2':                   {'x': 335, 'y': 323, 'size': 7, 'limit': 60},
-        'magic3':                   {'x': 330, 'y': 312, 'size': 10, 'limit': 40},
-        'magic4':                   {'x': 330, 'y': 302, 'size': 7, 'limit': 60},
-        'magic5':                   {'x': 335, 'y': 290, 'size': 6, 'limit': 60},
-        'magic6':                   {'x': 330, 'y': 279, 'size': 6, 'limit': 60},
-        'magic7':                   {'x': 332, 'y': 268, 'size': 6, 'limit': 60},
-        'magic8':                   {'x': 330, 'y': 258, 'size': 8, 'limit': 60},
-        'magic9':                   {'x': 330, 'y': 246, 'size': 10, 'limit': 40},
-        'magic10':                  {'x': 330, 'y': 234, 'size': 10, 'limit': 40},
-        'magic11':                  {'x': 330, 'y': 222, 'size': 10, 'limit': 40},
+        'dice':                     {'x': 230, 'y': 450, 'size': 10, 'limit': 15, 'dont_center': True},
+        'magic1':                   {'x': 220, 'y': 335, 'size': 10, 'limit': 40, 'dont_center': True},
+        'magic2':                   {'x': 220, 'y': 323, 'size': 7, 'limit': 60, 'dont_center': True},
+        'magic3':                   {'x': 220, 'y': 312, 'size': 10, 'limit': 40, 'dont_center': True},
+        'magic4':                   {'x': 220, 'y': 302, 'size': 7, 'limit': 60, 'dont_center': True},
+        'magic5':                   {'x': 220, 'y': 290, 'size': 6, 'limit': 60, 'dont_center': True},
+        'magic6':                   {'x': 220, 'y': 279, 'size': 6, 'limit': 60, 'dont_center': True},
+        'magic7':                   {'x': 220, 'y': 268, 'size': 6, 'limit': 60, 'dont_center': True},
+        'magic8':                   {'x': 220, 'y': 258, 'size': 8, 'limit': 60, 'dont_center': True},
+        'magic9':                   {'x': 220, 'y': 246, 'size': 10, 'limit': 40, 'dont_center': True},
+        'magic10':                  {'x': 220, 'y': 234, 'size': 10, 'limit': 40, 'dont_center': True},
+        'magic11':                  {'x': 220, 'y': 222, 'size': 10, 'limit': 40, 'dont_center': True},
 
         'weapon0.name':             {'x': 260, 'y': 390, 'size': 10, 'limit': 12},
         'weapon1.name':             {'x': 260, 'y': 370, 'size': 10, 'limit': 12},
@@ -155,7 +155,54 @@ def write_in_pdf(value, pdf, element_name):
         'weapon1.damage':           {'x': 370, 'y': 370, 'size': 10, 'limit': 12},
         'weapon2.damage':           {'x': 370, 'y': 350, 'size': 10, 'limit': 12},
 
-        'feature1':                 {'x': 500, 'y': 390, 'size': 10, 'limit': 12},
+        'feature1':                 {'x': 410, 'y': 400, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature2':                 {'x': 410, 'y': 390, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature3':                 {'x': 410, 'y': 380, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature4':                 {'x': 410, 'y': 370, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature5':                 {'x': 410, 'y': 360, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature6':                 {'x': 410, 'y': 350, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature7':                 {'x': 410, 'y': 340, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature8':                 {'x': 410, 'y': 330, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature9':                 {'x': 410, 'y': 320, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature10':                {'x': 410, 'y': 310, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature11':                {'x': 410, 'y': 300, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature12':                {'x': 410, 'y': 290, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature13':                {'x': 410, 'y': 280, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature14':                {'x': 410, 'y': 270, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature15':                {'x': 410, 'y': 260, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature16':                {'x': 410, 'y': 250, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature17':                {'x': 410, 'y': 240, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature18':                {'x': 410, 'y': 230, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature19':                {'x': 410, 'y': 220, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature20':                {'x': 410, 'y': 210, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature21':                {'x': 410, 'y': 200, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature22':                {'x': 410, 'y': 190, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature23':                {'x': 410, 'y': 180, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature24':                {'x': 410, 'y': 170, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature25':                {'x': 410, 'y': 160, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature26':                {'x': 410, 'y': 150, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature27':                {'x': 410, 'y': 140, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature28':                {'x': 410, 'y': 130, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature29':                {'x': 410, 'y': 120, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature30':                {'x': 410, 'y': 110, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature31':                {'x': 410, 'y': 100, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature32':                {'x': 410, 'y': 90, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature33':                {'x': 410, 'y': 80, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature34':                {'x': 410, 'y': 70, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature35':                {'x': 410, 'y': 60, 'size': 10, 'limit': 30, 'dont_center': True},
+
+        'language1':                {'x': 35, 'y': 160, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language2':                {'x': 35, 'y': 149, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language3':                {'x': 35, 'y': 138, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language4':                {'x': 35, 'y': 127, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language5':                {'x': 35, 'y': 116, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language6':                {'x': 35, 'y': 95, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language7':                {'x': 35, 'y': 84, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language8':                {'x': 35, 'y': 73, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language9':                {'x': 35, 'y': 62, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language10':               {'x': 35, 'y': 51, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language11':               {'x': 35, 'y': 30, 'size': 10, 'limit': 30, 'dont_center': True},
+        'language12':               {'x': 35, 'y': 19, 'size': 10, 'limit': 30, 'dont_center': True},
 
     }
     font_size = known_elements_dictionary[element_name]['size']
@@ -169,7 +216,8 @@ def write_in_pdf(value, pdf, element_name):
     if font_size < 5:
         font_size = 5
 
-    known_elements_dictionary[element_name]['x'] -= len(value) * font_size // 3  # Centring
+    if not ('dont_center' in known_elements_dictionary[element_name] and known_elements_dictionary[element_name]['dont_center'] is True):
+        known_elements_dictionary[element_name]['x'] -= len(value) * font_size // 3  # Centring
 
     pdf.setFont('FreeSans', font_size)
     pdf.drawString(x=known_elements_dictionary[element_name]['x'], y=known_elements_dictionary[element_name]['y'], text=value)
@@ -297,9 +345,9 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     write_in_pdf(f'Бонус мастерства ({character.xml.profbonus}) + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic2')
     write_in_pdf(f'Сложность спасброска: {10 + int(character.xml.abilities.intelligence.bonus)}', pdf, 'magic3')
     write_in_pdf(f'10 + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic4')
-    write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение оружием +', pdf, 'magic5')
-    write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если оружие фехтовальное', pdf, 'magic6')
-    write_in_pdf(f'Урон: Модификатор Силы ({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если оружие фехтовальное', pdf, 'magic7')
+    write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение+', pdf, 'magic5')
+    write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic6')
+    write_in_pdf(f'Урон: Модификатор Силы ({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic7')
 
     dexterity_included = character.xml.abilities.dexterity.bonus
     try:
@@ -347,9 +395,15 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
         write_in_pdf(f'{weapon.damagelist[0].dice}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
-        for feature in character.xml.featurelist:
-            print(feature)
-            print('\n')
+    for number, feature in enumerate(character.xml.featurelist, 1):
+        write_in_pdf(feature.name, pdf, f'feature{number}')
+
+    language_translation_dict = {'Common': 'Общий', 'Dwarvish': 'Дворфский', 'Elvish': 'Эльфийский'}
+    for number, language in enumerate(character.xml.languagelist, 1):
+        language_name = language.name
+        if language_name in language_translation_dict:
+            language_name = language_translation_dict[language_name]
+        write_in_pdf(f'{language_name} язык', pdf, f'language{number}')
 
     pdf.save()
     data.seek(0)
@@ -458,7 +512,6 @@ class Character:
 
 
 if __name__ == '__main__':
-    # straight_translate('Leila1.xml')
-    # character = Character('Leila1.xml')
-    # print(character.xml.abilities.strength.score)
+    # print(translate_to_iso_codes('Божественное Чувство'))
     run_pdf_creation('Satar')
+    # straight_translate('Satar.xml')
