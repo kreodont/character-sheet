@@ -416,9 +416,27 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
         write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
 
-    language_translation_dict = {'Common': 'Общий', 'Dwarvish': 'Дворфский', 'Elvish': 'Эльфийский'}
+    language_translation_dict = {'Common':      'Общий',
+                                 'Dwarvish':    'Дворфский',
+                                 'Elvish':      'Эльфийский',
+                                 'Abyssal':     'Бездны',
+                                 'Aquan':       'Водный',
+                                 'Celestial':   'Небесный',
+                                 'Deep Speech': 'Глубинный',
+                                 'Draconic':    'Драконий',
+                                 'Giant':       'Великаний',
+                                 'Gnomish':     'Гномий',
+                                 'Goblin':      'Гоблинский',
+                                 'Halfling':    'Полуросликов',
+                                 'Ingan':       'Огненный',
+                                 'Infernal':    'Инфернальный',
+                                 'Orc':         'Орочий',
+                                 'Primordal':   'Первородный',
+                                 'Sylvan':      'Лесной',
+                                 'Terran':      'Земной',
+                                 'UnderCommon': 'Глубинный Общий'}
     for number, language in enumerate(character.xml.languagelist, 1):
-        language_name = language.name
+        language_name = language.name.strip()
         if language_name in language_translation_dict:
             language_name = language_translation_dict[language_name]
         write_in_pdf(f'{language_name} язык', pdf, f'language{number}')
