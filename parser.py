@@ -382,7 +382,7 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
 
         attack_bonus = 0
         damage_bonus = 0
-        if weapon.prof == '1':
+        if hasattr(weapon, 'prof') and weapon.prof == '1':
             attack_bonus += int(character.xml.profbonus)
 
         if 'finesse' in weapon.properties.lower():
@@ -554,5 +554,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Satar')
+    run_pdf_creation('Leila')
     # straight_translate('Satar.xml')
