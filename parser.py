@@ -419,6 +419,9 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(f'{feature.name} (от {feature.source} {level})', pdf, f'feature{number * 2 - 1}')
 
     for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
+        if not hasattr(feature, 'name'):
+            continue
+
         write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
 
     language_translation_dict = {'Common':      'Общий',
@@ -554,5 +557,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Satar')
+    run_pdf_creation('dragonborn')
     # straight_translate('Satar.xml')
