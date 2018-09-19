@@ -382,7 +382,7 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
 
         attack_bonus = 0
         damage_bonus = 0
-        if weapon.prof == '1':
+        if hasattr(weapon, 'prof') and weapon.prof == '1':
             attack_bonus += int(character.xml.profbonus)
 
         if 'finesse' in weapon.properties.lower():
