@@ -388,6 +388,9 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         if 'finesse' in weapon.properties.lower():
             attack_bonus += max(int(character.xml.abilities.strength.bonus), int(character.xml.abilities.dexterity.bonus))
             damage_bonus += max(int(character.xml.abilities.strength.bonus), int(character.xml.abilities.dexterity.bonus))
+        elif 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
+            attack_bonus += int(character.xml.abilities.dexterity.bonus)
+            damage_bonus += int(character.xml.abilities.dexterity.bonus)
         else:
             attack_bonus += int(character.xml.abilities.strength.bonus)
             damage_bonus += int(character.xml.abilities.strength.bonus)
