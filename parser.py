@@ -557,5 +557,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('dragonborn')
+    run_pdf_creation('Erdogan')
     # straight_translate('Satar.xml')
