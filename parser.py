@@ -55,7 +55,7 @@ def run_pdf_creation(character_name, template_filename='character_sheet_light.pd
         f.write(form.read())
 
 
-def write_in_pdf(value, pdf, element_name):
+def write_in_pdf(value, pdf, element_name, fixed_font_size=None):
     known_elements_dictionary = {
         'name':                  {'x': 150, 'y': 715, 'size': 26, 'limit': 10},
         'strength':              {'x': 60, 'y': 615, 'size': 28, 'limit': 2, 'plus_minus': True},
@@ -218,6 +218,9 @@ def write_in_pdf(value, pdf, element_name):
 
     if not ('dont_center' in known_elements_dictionary[element_name] and known_elements_dictionary[element_name]['dont_center'] is True):
         known_elements_dictionary[element_name]['x'] -= len(value) * font_size // 3  # Centring
+
+    if fixed_font_size:
+        font_size = fixed_font_size
 
     pdf.setFont('FreeSans', font_size)
     pdf.drawString(x=known_elements_dictionary[element_name]['x'], y=known_elements_dictionary[element_name]['y'], text=value)
@@ -382,7 +385,8 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
 
         attack_bonus = 0
         damage_bonus = 0
-        if hasattr(weapon, 'prof') and weapon.prof == '1':
+
+        if hasattr(weapon, 'prof') and weapon.prof == '1':  # if need to add proficiency
             attack_bonus += int(character.xml.profbonus)
 
         if 'finesse' in weapon.properties.lower():
@@ -391,9 +395,13 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         elif 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
             attack_bonus += int(character.xml.abilities.dexterity.bonus)
             damage_bonus += int(character.xml.abilities.dexterity.bonus)
+        elif hasattr(weapon, 'attackstat'):
+            attack_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
+            damage_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
         else:
             attack_bonus += int(character.xml.abilities.strength.bonus)
             damage_bonus += int(character.xml.abilities.strength.bonus)
+
         if damage_bonus > 0:
             damage_bonus = '+' + str(damage_bonus)
         elif damage_bonus == 0:
@@ -419,13 +427,23 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
             level = feature.level
         except AttributeError:
             level = ''
-        write_in_pdf(f'{feature.name} (от {feature.source} {level})', pdf, f'feature{number * 2 - 1}')
+        text_to_write = f'{feature.name} (от {feature.source} {level})'
+        if len(text_to_write) > 64:
+            write_in_pdf(text_to_write[:64], pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
+            write_in_pdf(text_to_write[64:], pdf, f'feature{number * 2}', fixed_font_size=5)
+        else:
+            write_in_pdf(text_to_write, pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
 
     for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
         if not hasattr(feature, 'name'):
             continue
-
-        write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
+        text_to_write = f'{feature.name} (черта)'
+        if len(text_to_write) > 64:
+            write_in_pdf(text_to_write[:64], pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
+            write_in_pdf(text_to_write[64:], pdf, f'feature{number * 2}', fixed_font_size=5)
+        else:
+            write_in_pdf(text_to_write, pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
+        # write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
 
     language_translation_dict = {'Common':      'Общий',
                                  'Dwarvish':    'Дворфский',
@@ -520,7 +538,7 @@ class Character:
     @staticmethod
     def element_to_dict(element: ElementTree.Element) -> dict:
         dict_to_return = {}
-        if element.tag == 'class':
+        if element.tag == 'class':  # class is a keyword
             element.tag = 'class_'
 
         if element.tag.startswith('id-'):
@@ -548,7 +566,12 @@ class Character:
         self.xml = Character.convert(Character.element_to_dict(ElementTree.parse(filename).getroot())['character'])
 
     @staticmethod
-    def convert(dictionary: dict):
+    def convert(dictionary: dict) -> namedtuple:
+        """
+        Recursively converts a dictionary into a namedtuple
+        :param dictionary: dict to convert
+        :return:
+        """
         for key, value in dictionary.items():
             if isinstance(value, dict):
                 dictionary[key] = Character.convert(value)
@@ -560,5 +583,5 @@ class Character:
 
 if __name__ == '__main__':
     # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Erdogan')
+    run_pdf_creation('Satar3')
     # straight_translate('Satar.xml')
