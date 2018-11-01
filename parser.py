@@ -7,6 +7,15 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
+AbilitiesTranslation = namedtuple('Abilities Translation', ('strength', 'dexterity', 'constitution', 'intellect', 'wisdom', 'charisma'))
+Cases = namedtuple('Падеж', ('именительный', 'родительный', 'дательный', 'винительный', 'творительный', 'предложный'))
+abilities_translation = AbilitiesTranslation(strength=Cases(именительный='сила',  родительный='силы', дательный='силе', винительный='силу', творительный='силой', предложный='силе'),
+                                             dexterity=Cases(именительный='ловкость', родительный='ловкости', дательный='ловкости', винительный='ловкость', творительный='ловкостью', предложный='ловкости'),
+                                             constitution=Cases(именительный='телосложение', родительный='телосложения', дательный='телосложению', винительный='телосложение', творительный='телосложением', предложный='телосложении'),
+                                             intellect=Cases(именительный='интеллект', родительный='интеллекта', дательный='интеллекту', винительный='интеллект', творительный='интеллектом', предложный='интеллекте'),
+                                             wisdom=Cases(именительный='мудрость', родительный='мудрости', дательный='мудрости', винительный='мудрость', творительный='мудростью', предложный='мудрости'),
+                                             charisma=Cases(именительный='харизма', родительный='харизмы', дательный='харизме', винительный='харизму', творительный='харизмой', предложный='харизме'))
+
 
 def straight_translate(filename: str) -> None:
     """
@@ -464,6 +473,7 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
                                  'Sylvan':      'Лесной',
                                  'Terran':      'Земной',
                                  'UnderCommon': 'Глубинный Общий'}
+
     for number, language in enumerate(character.xml.languagelist, 1):
         language_name = language.name.strip()
         if language_name in language_translation_dict:
