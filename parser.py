@@ -7,7 +7,8 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-AbilitiesTranslation = namedtuple('Abilities Translation', ('strength', 'dexterity', 'constitution', 'intellect', 'wisdom', 'charisma'))
+DefaultNamedtuple = namedtuple('Default', ())
+AbilitiesTranslation = namedtuple('AbilitiesTranslation', ('strength', 'dexterity', 'constitution', 'intellect', 'wisdom', 'charisma'))
 Cases = namedtuple('Падеж', ('именительный', 'родительный', 'дательный', 'винительный', 'творительный', 'предложный'))
 abilities_translation = AbilitiesTranslation(strength=Cases(именительный='сила',  родительный='силы', дательный='силе', винительный='силу', творительный='силой', предложный='силе'),
                                              dexterity=Cases(именительный='ловкость', родительный='ловкости', дательный='ловкости', винительный='ловкость', творительный='ловкостью', предложный='ловкости'),
@@ -15,24 +16,6 @@ abilities_translation = AbilitiesTranslation(strength=Cases(именительн
                                              intellect=Cases(именительный='интеллект', родительный='интеллекта', дательный='интеллекту', винительный='интеллект', творительный='интеллектом', предложный='интеллекте'),
                                              wisdom=Cases(именительный='мудрость', родительный='мудрости', дательный='мудрости', винительный='мудрость', творительный='мудростью', предложный='мудрости'),
                                              charisma=Cases(именительный='харизма', родительный='харизмы', дательный='харизме', винительный='харизму', творительный='харизмой', предложный='харизме'))
-
-
-def straight_translate(filename: str) -> None:
-    """
-    For using https://www.alonlinetools.net/FGCharacterSheet.aspx
-    Doesn't work for now
-    :param filename: xml file exported from Fantasy Grounds
-    :return: New xml file created
-    """
-    with open(f'translated_{filename}', 'w', encoding='utf-8') as output_file:
-        with open(filename) as input_file:
-            text = input_file.read()
-            text = text.replace('<?', '<\!').replace('?>', '\!>')  # to save xml tags
-            # text = text.replace('iso-8859-1', 'utf-8')
-            text = translate_from_iso_codes(text)
-            print(text)
-            text = text.replace('<\!', '<?').replace('\!>', '?>')  # restoring xml tags
-            output_file.write(text)
 
 
 def translate_to_iso_codes(text: str) -> str:
@@ -349,17 +332,34 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     write_in_pdf(character.xml.hp.total, pdf, 'hp_max')
     write_in_pdf(str(len(dice)), pdf, 'total_dice')
     write_in_pdf(' '.join(dice), pdf, 'dice')
-    magic_attacks_modifier = int(character.xml.profbonus) + int(character.xml.abilities.intelligence.bonus)
+
+    spellcasting_ability_string = None
+    character.xml.featurelist: DefaultNamedtuple
+    for feature_name in character.xml.featurelist._asdict().keys():
+        if 'spellcasting' in feature_name:
+            spellcasting_ability_text = getattr(character.xml.featurelist, feature_name).text
+            spellcasting_ability_string = re.search('(\w+) is your spellcasting ability', spellcasting_ability_text)
+            if spellcasting_ability_string:
+                spellcasting_ability_string = spellcasting_ability_string.group(1).lower()
+            else:
+                spellcasting_ability_string = None
+
+    if not spellcasting_ability_string:
+        spellcasting_ability_string = 'intellect'
+
+    spellcasting_ability = getattr(character.xml.abilities, spellcasting_ability_string)
+
+    magic_attacks_modifier = int(character.xml.profbonus) + int(character.xml.abilities.charisma.bonus)
     if magic_attacks_modifier > 0:
         magic_attacks_modifier = '+' + str(magic_attacks_modifier)
 
-    write_in_pdf(f'Модификатор магических атак: {magic_attacks_modifier}', pdf, 'magic1')
-    write_in_pdf(f'Бонус мастерства ({character.xml.profbonus}) + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic2')
-    write_in_pdf(f'Сложность спасброска: {10 + int(character.xml.abilities.intelligence.bonus)}', pdf, 'magic3')
-    write_in_pdf(f'10 + Модификатор Интеллекта ({character.xml.abilities.intelligence.bonus})', pdf, 'magic4')
-    write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение+', pdf, 'magic5')
-    write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic6')
-    write_in_pdf(f'Урон: Модификатор Силы ({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic7')
+    write_in_pdf(f'Модификатор магических атак: {magic_attacks_modifier}', pdf, 'magic1', fixed_font_size=6)
+    write_in_pdf(f'Бонус мастерства ({character.xml.profbonus}) + Модификатор {getattr(abilities_translation, spellcasting_ability_string).родительный.capitalize()} ({spellcasting_ability.bonus})', pdf, 'magic2', fixed_font_size=6)
+    write_in_pdf(f'Сложность спасброска: {10 + int(spellcasting_ability.bonus)}', pdf, 'magic3', fixed_font_size=6)
+    write_in_pdf(f'10 + Модификатор {getattr(abilities_translation, spellcasting_ability_string).родительный.capitalize()} ({spellcasting_ability.bonus})', pdf, 'magic4', fixed_font_size=6)
+    write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение+', pdf, 'magic5', fixed_font_size=6)
+    write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic6', fixed_font_size=6)
+    write_in_pdf(f'Урон: Модификатор Силы ({character.xml.abilities.strength.bonus}) или Ловкости({character.xml.abilities.dexterity.bonus}), если фехтовальное', pdf, 'magic7', fixed_font_size=5)
 
     dexterity_included = character.xml.abilities.dexterity.bonus
     try:
@@ -368,7 +368,11 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     except AttributeError:
         pass
 
-    write_in_pdf(f'КД: Осн(10) + Броня({character.xml.defenses.ac.armor}) + Ловк({dexterity_included}) + Щит({character.xml.defenses.ac.shield})', pdf, 'magic8')
+    ac_string = f'КД: Осн(10) + Броня({character.xml.defenses.ac.armor}) + Ловк({dexterity_included}) + Щит({character.xml.defenses.ac.shield})'
+    if character.xml.defenses.ac.misc != 0:
+        ac_string += f' + Доп({character.xml.defenses.ac.misc})'
+
+    write_in_pdf(ac_string, pdf, 'magic8', fixed_font_size=6)
 
     damage_translations_dict = {'slashing':    'рубящий',
                                 'piercing':    'колющий',
@@ -419,9 +423,9 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
         for unique_dice in set(damage_dice_list):
             if damage_dice_list.count(unique_dice) == 1:
-                damage_dice_string += f'{unique_dice} + '
+                damage_dice_string += f'{unique_dice}+ '
             else:
-                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice} + '
+                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice}+ '
 
         damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
 
@@ -509,7 +513,6 @@ def translate_from_iso_codes(text: str) -> str:
         try:
             letter_code = int.from_bytes(letter.encode('latin-1'), 'big')  # this is decoding from FG format
         except UnicodeEncodeError:
-            # print('Error: %s' % e)
             continue
 
         if 192 <= letter_code <= 256:
@@ -565,10 +568,12 @@ class Character:
                     replace('.', '')
         element.tag = element.tag.replace('-', '_')
 
-        if list(element):  # if it has children
+        if list(element) and element.tag != 'text':
             for e in list(element):
                 dict_to_return[e.tag] = Character.element_to_dict(e)
         else:
+            if element.tag == 'text':
+                element.text = ' '.join([t.text for t in list(element) if t.text])
             dict_to_return[element.tag] = translate_from_iso_codes(element.text)
         return dict_to_return
 
@@ -592,6 +597,4 @@ class Character:
 
 
 if __name__ == '__main__':
-    # print(translate_to_iso_codes('Божественное Чувство'))
-    run_pdf_creation('Satar3')
-    # straight_translate('Satar.xml')
+    run_pdf_creation('Satar4')
