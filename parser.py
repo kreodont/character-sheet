@@ -423,9 +423,9 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
         for unique_dice in set(damage_dice_list):
             if damage_dice_list.count(unique_dice) == 1:
-                damage_dice_string += f'{unique_dice}+ '
+                damage_dice_string += f'{unique_dice} + '
             else:
-                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice}+ '
+                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice} + '
 
         damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
 
