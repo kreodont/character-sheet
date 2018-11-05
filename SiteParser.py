@@ -36,10 +36,13 @@ attributes_translations_dict = {'уровень':            'level',
 
 
 async def fetch_spell(*, eng_spell_name: str, session: aiohttp.client.ClientSession, debug: bool = False) -> typing.Optional[Spell]:
-    async with session.get(f'http://dungeon.su/spells/{eng_spell_name}', headers={'Accept':       'text/html,application/xhtml+xml,application/xml',
-                                                                                  'Content-Type': 'text/html'}) as response:
+    searching_url = 'http://dungeon.su/spells/'
+    # searching_url = f'http://dungeon.su/spells/{eng_spell_name}'
+    async with session.get(searching_url, headers={'Accept':       'text/html,application/xhtml+xml,application/xml',
+                                                   'Content-Type': 'text/html'}, params={'search': eng_spell_name}) as response:
         if debug:
             print(f'Fetching spell "{eng_spell_name}"')
+            print(response.url)
 
         response_binary = await response.read()
         html = BeautifulSoup(response_binary.decode('utf-8'), 'html.parser')
@@ -122,5 +125,5 @@ async def open_connection_and_fetch_spells(spell_names_list: typing.List[str]):
 
 
 if __name__ == '__main__':
-    future = asyncio.ensure_future(open_connection_and_fetch_spells(['1-hellish_rebuke', '2-antipathy_sympathy']))
+    future = asyncio.ensure_future(open_connection_and_fetch_spells(['hellish rebuke']))
     asyncio.get_event_loop().run_until_complete(future)
