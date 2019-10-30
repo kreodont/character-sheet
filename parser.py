@@ -11,25 +11,42 @@ DefaultNamedtuple = namedtuple('Default', ())
 AbilitiesTranslation = namedtuple('AbilitiesTranslation', ('strength', 'dexterity', 'constitution', 'intelligence',
                                                            'wisdom', 'charisma'))
 Cases = namedtuple('Падеж', ('именительный', 'родительный', 'дательный', 'винительный', 'творительный', 'предложный'))
-abilities_translation = AbilitiesTranslation(strength=Cases(именительный='сила', родительный='силы', дательный='силе',
-                                                            винительный='силу', творительный='силой',
+abilities_translation = AbilitiesTranslation(strength=Cases(именительный='сила',
+                                                            родительный='силы',
+                                                            дательный='силе',
+                                                            винительный='силу',
+                                                            творительный='силой',
                                                             предложный='силе'),
-                                             dexterity=Cases(именительный='ловкость', родительный='ловкости',
-                                                             дательный='ловкости', винительный='ловкость',
-                                                             творительный='ловкостью', предложный='ловкости'),
-                                             constitution=Cases(именительный='телосложение', родительный='телосложения',
-                                                                дательный='телосложению', винительный='телосложение',
+                                             dexterity=Cases(именительный='ловкость',
+                                                             родительный='ловкости',
+                                                             дательный='ловкости',
+                                                             винительный='ловкость',
+                                                             творительный='ловкостью',
+                                                             предложный='ловкости'),
+                                             constitution=Cases(именительный='телосложение',
+                                                                родительный='телосложения',
+                                                                дательный='телосложению',
+                                                                винительный='телосложение',
                                                                 творительный='телосложением',
                                                                 предложный='телосложении'),
-                                             intelligence=Cases(именительный='интеллект', родительный='интеллекта',
-                                                                дательный='интеллекту', винительный='интеллект',
-                                                                творительный='интеллектом', предложный='интеллекте'),
-                                             wisdom=Cases(именительный='мудрость', родительный='мудрости',
-                                                          дательный='мудрости', винительный='мудрость',
-                                                          творительный='мудростью', предложный='мудрости'),
-                                             charisma=Cases(именительный='харизма', родительный='харизмы',
-                                                            дательный='харизме', винительный='харизму',
-                                                            творительный='харизмой', предложный='харизме'))
+                                             intelligence=Cases(именительный='интеллект',
+                                                                родительный='интеллекта',
+                                                                дательный='интеллекту',
+                                                                винительный='интеллект',
+                                                                творительный='интеллектом',
+                                                                предложный='интеллекте'),
+                                             wisdom=Cases(именительный='мудрость',
+                                                          родительный='мудрости',
+                                                          дательный='мудрости',
+                                                          винительный='мудрость',
+                                                          творительный='мудростью',
+                                                          предложный='мудрости'),
+                                             charisma=Cases(именительный='харизма',
+                                                            родительный='харизмы',
+                                                            дательный='харизме',
+                                                            винительный='харизму',
+                                                            творительный='харизмой',
+                                                            предложный='харизме'))
 
 
 def translate_to_iso_codes(text: str) -> str:
@@ -52,10 +69,10 @@ def translate_to_iso_codes(text: str) -> str:
     return result_text
 
 
-def run_pdf_creation(character_name, template_filename='character_sheet_light.pdf'):
+def run_pdf_creation(character_name, template_filename='character_sheet_light.pdf', skip_name=False):
     character = Character(f'{character_name}.xml')
     print(f'Character "{character.xml.name}" loaded')
-    canvas_data = get_overlay_canvas(character)
+    canvas_data = get_overlay_canvas(character, skip_name=skip_name)
     form = merge(canvas_data, template_path=template_filename)
     with open(f'{character_name}.pdf', 'wb') as f:
         f.write(form.read())
@@ -196,6 +213,10 @@ def write_in_pdf(value, pdf, element_name, fixed_font_size=None):
         'feature33': {'x': 410, 'y': 49, 'size': 10, 'limit': 30, 'dont_center': True},
         'feature34': {'x': 410, 'y': 38, 'size': 10, 'limit': 30, 'dont_center': True},
         'feature35': {'x': 410, 'y': 27, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature36': {'x': 410, 'y': 16, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature37': {'x': 410, 'y': 5, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature38': {'x': 410, 'y': -6, 'size': 10, 'limit': 30, 'dont_center': True},
+        'feature39': {'x': 410, 'y': -17, 'size': 10, 'limit': 30, 'dont_center': True},
 
         'language1': {'x': 35, 'y': 160, 'size': 10, 'limit': 30, 'dont_center': True},
         'language2': {'x': 35, 'y': 149, 'size': 10, 'limit': 30, 'dont_center': True},
@@ -235,11 +256,13 @@ def write_in_pdf(value, pdf, element_name, fixed_font_size=None):
                    y=known_elements_dictionary[element_name]['y'], text=value)
 
 
-def get_overlay_canvas(character: "Character") -> io.BytesIO:
+def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
     data = io.BytesIO()
     pdf = canvas.Canvas(data)
     pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
-    write_in_pdf(character.xml.name, pdf, 'name')
+    if not skip_name:
+        write_in_pdf(character.xml.name, pdf, 'name')
+
     write_in_pdf(character.xml.abilities.strength.bonus, pdf, 'strength')
     write_in_pdf(character.xml.abilities.strength.score, pdf, 'strength.value')
     write_in_pdf(character.xml.abilities.dexterity.bonus, pdf, 'dexterity')
@@ -273,42 +296,45 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     write_in_pdf(character.xml.abilities.wisdom.save, pdf, 'wisdom.save')
     write_in_pdf(character.xml.abilities.charisma.save, pdf, 'charisma.save')
 
-    if character.xml.skilllist.acrobatics.prof == '1':
-        write_in_pdf('v', pdf, 'acrobatics.prof')
-    if character.xml.skilllist.investigation.prof == '1':
-        write_in_pdf('v', pdf, 'investigation.prof')
-    if character.xml.skilllist.athletics.prof == '1':
-        write_in_pdf('v', pdf, 'athletic.prof')
-    if character.xml.skilllist.perception.prof == '1':
-        write_in_pdf('v', pdf, 'perception.prof')
-    if character.xml.skilllist.survival.prof == '1':
-        write_in_pdf('v', pdf, 'survival.prof')
-    if character.xml.skilllist.performance.prof == '1':
-        write_in_pdf('v', pdf, 'performance.prof')
-    if character.xml.skilllist.intimidation.prof == '1':
-        write_in_pdf('v', pdf, 'intimidation.prof')
-    if character.xml.skilllist.history.prof == '1':
-        write_in_pdf('v', pdf, 'history.prof')
-    if character.xml.skilllist.sleight_of_hand.prof == '1':
-        write_in_pdf('v', pdf, 'sleight_of_hand.prof')
-    if character.xml.skilllist.arcana.prof == '1':
-        write_in_pdf('v', pdf, 'arcana.prof')
-    if character.xml.skilllist.medicine.prof == '1':
-        write_in_pdf('v', pdf, 'medicine.prof')
-    if character.xml.skilllist.deception.prof == '1':
-        write_in_pdf('v', pdf, 'deception.prof')
-    if character.xml.skilllist.nature.prof == '1':
-        write_in_pdf('v', pdf, 'nature.prof')
-    if character.xml.skilllist.insight.prof == '1':
-        write_in_pdf('v', pdf, 'insight.prof')
-    if character.xml.skilllist.religion.prof == '1':
-        write_in_pdf('v', pdf, 'religion.prof')
-    if character.xml.skilllist.stealth.prof == '1':
-        write_in_pdf('v', pdf, 'stealth.prof')
-    if character.xml.skilllist.persuasion.prof == '1':
-        write_in_pdf('v', pdf, 'persuasion.prof')
-    if character.xml.skilllist.animal_handling.prof == '1':
-        write_in_pdf('v', pdf, 'animal_handling.prof')
+    try:
+        if hasattr(character.xml.skilllist, 'acrobatics') and character.xml.skilllist.acrobatics.prof == '1':
+            write_in_pdf('v', pdf, 'acrobatics.prof')
+        if hasattr(character.xml.skilllist, 'investigation') and character.xml.skilllist.investigation.prof == '1':
+            write_in_pdf('v', pdf, 'investigation.prof')
+        if hasattr(character.xml.skilllist, 'athletic') and character.xml.skilllist.athletics.prof == '1':
+            write_in_pdf('v', pdf, 'athletic.prof')
+        if hasattr(character.xml.skilllist, 'perception') and character.xml.skilllist.perception.prof == '1':
+            write_in_pdf('v', pdf, 'perception.prof')
+        if hasattr(character.xml.skilllist, 'survival') and character.xml.skilllist.survival.prof == '1':
+            write_in_pdf('v', pdf, 'survival.prof')
+        if hasattr(character.xml.skilllist, 'performance') and character.xml.skilllist.performance.prof == '1':
+            write_in_pdf('v', pdf, 'performance.prof')
+        if hasattr(character.xml.skilllist, 'intimidation') and character.xml.skilllist.intimidation.prof == '1':
+            write_in_pdf('v', pdf, 'intimidation.prof')
+        if hasattr(character.xml.skilllist, 'history') and character.xml.skilllist.history.prof == '1':
+            write_in_pdf('v', pdf, 'history.prof')
+        if hasattr(character.xml.skilllist, 'sleight_of_hand') and character.xml.skilllist.sleight_of_hand.prof == '1':
+            write_in_pdf('v', pdf, 'sleight_of_hand.prof')
+        if hasattr(character.xml.skilllist, 'arcana') and character.xml.skilllist.arcana.prof == '1':
+            write_in_pdf('v', pdf, 'arcana.prof')
+        if hasattr(character.xml.skilllist, 'medicine') and character.xml.skilllist.medicine.prof == '1':
+            write_in_pdf('v', pdf, 'medicine.prof')
+        if hasattr(character.xml.skilllist, 'deception') and character.xml.skilllist.deception.prof == '1':
+            write_in_pdf('v', pdf, 'deception.prof')
+        if hasattr(character.xml.skilllist, 'nature') and character.xml.skilllist.nature.prof == '1':
+            write_in_pdf('v', pdf, 'nature.prof')
+        if hasattr(character.xml.skilllist, 'insight') and character.xml.skilllist.insight.prof == '1':
+            write_in_pdf('v', pdf, 'insight.prof')
+        if hasattr(character.xml.skilllist, 'religion') and character.xml.skilllist.religion.prof == '1':
+            write_in_pdf('v', pdf, 'religion.prof')
+        if hasattr(character.xml.skilllist, 'stealth') and character.xml.skilllist.stealth.prof == '1':
+            write_in_pdf('v', pdf, 'stealth.prof')
+        if hasattr(character.xml.skilllist, 'persuasion') and character.xml.skilllist.persuasion.prof == '1':
+            write_in_pdf('v', pdf, 'persuasion.prof')
+        if hasattr(character.xml.skilllist, 'animal_handling') and character.xml.skilllist.animal_handling.prof == '1':
+            write_in_pdf('v', pdf, 'animal_handling.prof')
+    except AttributeError:
+        pass
 
     write_in_pdf(character.xml.skilllist.acrobatics.total, pdf, 'acrobatics')
     write_in_pdf(character.xml.skilllist.investigation.total, pdf, 'investigation')
@@ -345,7 +371,10 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         write_in_pdf(character.xml.alignment, pdf, 'alignment')
     except AttributeError:
         pass
-    write_in_pdf(character.xml.background, pdf, 'background')
+    try:
+        write_in_pdf(character.xml.background, pdf, 'background')
+    except AttributeError:
+        pass
     write_in_pdf(character.xml.hp.total, pdf, 'hp_max')
     write_in_pdf(str(len(dice)), pdf, 'total_dice')
     write_in_pdf(' '.join(dice), pdf, 'dice')
@@ -355,7 +384,7 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
     for feature_name in character.xml.featurelist._asdict().keys():
         if 'spellcasting' in feature_name:
             spellcasting_ability_text = getattr(character.xml.featurelist, feature_name).text
-            spellcasting_ability_string = re.search('(\w+) is your spellcasting ability', spellcasting_ability_text)
+            spellcasting_ability_string = re.search(r'(\w+) is your spellcasting ability', spellcasting_ability_text)
             if spellcasting_ability_string:
                 spellcasting_ability_string = spellcasting_ability_string.group(1).lower()
             else:
@@ -430,12 +459,14 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         if hasattr(weapon, 'prof') and weapon.prof == '1':  # if need to add proficiency
             attack_bonus += int(character.xml.profbonus)
 
-        if 'finesse' in weapon.properties.lower():
+
+        if hasattr(weapon, 'properties') and 'finesse' in weapon.properties.lower():
             attack_bonus += max(int(character.xml.abilities.strength.bonus),
                                 int(character.xml.abilities.dexterity.bonus))
             damage_bonus += max(int(character.xml.abilities.strength.bonus),
                                 int(character.xml.abilities.dexterity.bonus))
-        elif 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
+
+        elif hasattr(weapon, 'properties') and 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
             attack_bonus += int(character.xml.abilities.dexterity.bonus)
             damage_bonus += int(character.xml.abilities.dexterity.bonus)
         elif hasattr(weapon, 'attackstat'):
@@ -444,6 +475,12 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         else:
             attack_bonus += int(character.xml.abilities.strength.bonus)
             damage_bonus += int(character.xml.abilities.strength.bonus)
+
+        if hasattr(weapon, 'attackbonus'):
+            attack_bonus += int(weapon.attackbonus)
+
+        if hasattr(weapon.damagelist[0], 'bonus'):
+            damage_bonus += int(weapon.damagelist[0].bonus)
 
         if damage_bonus > 0:
             damage_bonus = '+' + str(damage_bonus)
@@ -477,16 +514,17 @@ def get_overlay_canvas(character: "Character") -> io.BytesIO:
         else:
             write_in_pdf(text_to_write, pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
 
-    for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
-        if not hasattr(feature, 'name'):
-            continue
-        text_to_write = f'{feature.name} (черта)'
-        if len(text_to_write) > 64:
-            write_in_pdf(text_to_write[:64], pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
-            write_in_pdf(text_to_write[64:], pdf, f'feature{number * 2}', fixed_font_size=5)
-        else:
-            write_in_pdf(text_to_write, pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
-        # write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
+    if hasattr(character.xml, 'featlist'):
+        for number, feature in enumerate(character.xml.featlist, feature_list_position + 1):
+            if not hasattr(feature, 'name'):
+                continue
+            text_to_write = f'{feature.name} (черта)'
+            if len(text_to_write) > 64:
+                write_in_pdf(text_to_write[:64], pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
+                write_in_pdf(text_to_write[64:], pdf, f'feature{number * 2}', fixed_font_size=5)
+            else:
+                write_in_pdf(text_to_write, pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
+            # write_in_pdf(f'{feature.name} (черта)', pdf, f'feature{number * 2 - 1}')
 
     language_translation_dict = {'Common': 'Общий',
                                  'Dwarvish': 'Дворфский',
@@ -627,4 +665,4 @@ class Character:
 
 
 if __name__ == '__main__':
-    run_pdf_creation('Leila4')
+    run_pdf_creation('Satar9', skip_name=True)
