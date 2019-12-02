@@ -665,4 +665,4 @@ class Character:
 
 
 if __name__ == '__main__':
-    run_pdf_creation('Satar9', skip_name=True)
+    run_pdf_creation('tormund9', skip_name=True)
