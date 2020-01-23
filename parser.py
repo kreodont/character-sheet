@@ -403,10 +403,11 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
     write_in_pdf(f'Бонус мастерства ({character.xml.profbonus}) + '
                  f'Модификатор {getattr(abilities_translation, spellcasting_ability_string).родительный.capitalize()} '
                  f'({spellcasting_ability.bonus})', pdf, 'magic2', fixed_font_size=6)
-    write_in_pdf(f'Сложность спасброска: {10 + int(spellcasting_ability.bonus)}', pdf, 'magic3', fixed_font_size=6)
-    write_in_pdf(f'10 + Модификатор '
+    write_in_pdf(f'Сложность спасброска: {8 + int(spellcasting_ability.bonus) + int(character.xml.profbonus)}', pdf, 'magic3', fixed_font_size=6)
+    write_in_pdf(f'8 + Модификатор '
                  f'{getattr(abilities_translation, spellcasting_ability_string).родительный.capitalize()} '
-                 f'({spellcasting_ability.bonus})', pdf, 'magic4', fixed_font_size=6)
+                 f'({spellcasting_ability.bonus}) + Бонус мастерства', pdf,
+                 'magic4', fixed_font_size=6)
     write_in_pdf(f'Атака: Бонус мастерства ({character.xml.profbonus}), если проф. владение+', pdf, 'magic5',
                  fixed_font_size=6)
     write_in_pdf(f'Модификатор Силы({character.xml.abilities.strength.bonus}) или '
@@ -450,8 +451,11 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
     for number, weapon in enumerate(weapons):
         if number > 2:
             break
-        damage_type = damage_translations_dict[weapon.damagelist[0].type.lower()] \
-            if weapon.damagelist[0].type.lower() in damage_translations_dict else weapon.damagelist[0].type.lower()
+        try:
+            damage_type = damage_translations_dict[weapon.damagelist[0].type.lower()] \
+                if weapon.damagelist[0].type.lower() in damage_translations_dict else weapon.damagelist[0].type.lower()
+        except:
+            damage_type = ''
 
         attack_bonus = 0
         damage_bonus = 0
@@ -479,7 +483,8 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
         if hasattr(weapon, 'attackbonus'):
             attack_bonus += int(weapon.attackbonus)
 
-        if hasattr(weapon.damagelist[0], 'bonus'):
+        if hasattr(weapon, 'damagelist') and hasattr(weapon.damagelist[0],
+                                                  'bonus'):
             damage_bonus += int(weapon.damagelist[0].bonus)
 
         if damage_bonus > 0:
@@ -487,7 +492,10 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
         elif damage_bonus == 0:
             damage_bonus = ''
         damage_dice_string = ''
-        damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
+        try:
+            damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
+        except:
+            damage_dice_list = []
         for unique_dice in set(damage_dice_list):
             if damage_dice_list.count(unique_dice) == 1:
                 damage_dice_string += f'{unique_dice} + '
@@ -496,9 +504,10 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
 
         damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
 
-        write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
-        write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
-        write_in_pdf(f'{damage_dice_string}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
+        if hasattr(weapon, 'name'):
+            write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
+            write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
+            write_in_pdf(f'{damage_dice_string}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
     feature_list_position = 0
     for number, feature in enumerate(character.xml.featurelist, 1):
@@ -507,7 +516,9 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
             level = feature.level
         except AttributeError:
             level = ''
-        text_to_write = f'{feature.name} (от {feature.source} {level})'
+        text_to_write = ''
+        if hasattr(feature, 'name') and hasattr(feature, 'source'):
+            text_to_write = f'{feature.name} (от {feature.source} {level})'
         if len(text_to_write) > 64:
             write_in_pdf(text_to_write[:64], pdf, f'feature{number * 2 - 1}', fixed_font_size=5)
             write_in_pdf(text_to_write[64:], pdf, f'feature{number * 2}', fixed_font_size=5)
@@ -665,4 +676,4 @@ class Character:
 
 
 if __name__ == '__main__':
-    run_pdf_creation('tormund9', skip_name=True)
+    run_pdf_creation('shavel', skip_name=True)
