@@ -336,24 +336,24 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
     except AttributeError:
         pass
 
-    write_in_pdf(character.xml.skilllist.acrobatics.total, pdf, 'acrobatics')
-    write_in_pdf(character.xml.skilllist.investigation.total, pdf, 'investigation')
-    write_in_pdf(character.xml.skilllist.athletics.total, pdf, 'athletic')
-    write_in_pdf(character.xml.skilllist.perception.total, pdf, 'perception')
-    write_in_pdf(character.xml.skilllist.survival.total, pdf, 'survival')
-    write_in_pdf(character.xml.skilllist.performance.total, pdf, 'performance')
-    write_in_pdf(character.xml.skilllist.intimidation.total, pdf, 'intimidation')
-    write_in_pdf(character.xml.skilllist.history.total, pdf, 'history')
-    write_in_pdf(character.xml.skilllist.sleight_of_hand.total, pdf, 'sleight_of_hand')
-    write_in_pdf(character.xml.skilllist.arcana.total, pdf, 'arcana')
-    write_in_pdf(character.xml.skilllist.medicine.total, pdf, 'medicine')
-    write_in_pdf(character.xml.skilllist.deception.total, pdf, 'deception')
-    write_in_pdf(character.xml.skilllist.nature.total, pdf, 'nature')
-    write_in_pdf(character.xml.skilllist.insight.total, pdf, 'insight')
-    write_in_pdf(character.xml.skilllist.religion.total, pdf, 'religion')
-    write_in_pdf(character.xml.skilllist.stealth.total, pdf, 'stealth')
-    write_in_pdf(character.xml.skilllist.persuasion.total, pdf, 'persuasion')
-    write_in_pdf(character.xml.skilllist.animal_handling.total, pdf, 'animal_handling')
+    # write_in_pdf(character.xml.skilllist.acrobatics.total, pdf, 'acrobatics')
+    # write_in_pdf(character.xml.skilllist.investigation.total, pdf, 'investigation')
+    # write_in_pdf(character.xml.skilllist.athletics.total, pdf, 'athletic')
+    # write_in_pdf(character.xml.skilllist.perception.total, pdf, 'perception')
+    # write_in_pdf(character.xml.skilllist.survival.total, pdf, 'survival')
+    # write_in_pdf(character.xml.skilllist.performance.total, pdf, 'performance')
+    # write_in_pdf(character.xml.skilllist.intimidation.total, pdf, 'intimidation')
+    # write_in_pdf(character.xml.skilllist.history.total, pdf, 'history')
+    # write_in_pdf(character.xml.skilllist.sleight_of_hand.total, pdf, 'sleight_of_hand')
+    # write_in_pdf(character.xml.skilllist.arcana.total, pdf, 'arcana')
+    # write_in_pdf(character.xml.skilllist.medicine.total, pdf, 'medicine')
+    # write_in_pdf(character.xml.skilllist.deception.total, pdf, 'deception')
+    # write_in_pdf(character.xml.skilllist.nature.total, pdf, 'nature')
+    # write_in_pdf(character.xml.skilllist.insight.total, pdf, 'insight')
+    # write_in_pdf(character.xml.skilllist.religion.total, pdf, 'religion')
+    # write_in_pdf(character.xml.skilllist.stealth.total, pdf, 'stealth')
+    # write_in_pdf(character.xml.skilllist.persuasion.total, pdf, 'persuasion')
+    # write_in_pdf(character.xml.skilllist.animal_handling.total, pdf, 'animal_handling')
 
     write_in_pdf(character.xml.defenses.ac.total, pdf, 'armor')
     write_in_pdf(character.xml.initiative.total, pdf, 'initiative')
@@ -445,60 +445,60 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
                                 'radiant': 'излучение',
                                 'thunder': 'звук',
                                 }
-    weapons = character.xml.weaponlist
+    # weapons = character.xml.weaponlist
 
-    for number, weapon in enumerate(weapons):
-        if number > 2:
-            break
-        damage_type = damage_translations_dict[weapon.damagelist[0].type.lower()] \
-            if weapon.damagelist[0].type.lower() in damage_translations_dict else weapon.damagelist[0].type.lower()
+    # for number, weapon in enumerate(weapons):
+    #     if number > 2:
+    #         break
+    #     damage_type = damage_translations_dict[weapon.damagelist[0].type.lower()] \
+    #         if weapon.damagelist[0].type.lower() in damage_translations_dict else weapon.damagelist[0].type.lower()
+    #
+    #     attack_bonus = 0
+    #     damage_bonus = 0
+    #
+    #     if hasattr(weapon, 'prof') and weapon.prof == '1':  # if need to add proficiency
+    #         attack_bonus += int(character.xml.profbonus)
 
-        attack_bonus = 0
-        damage_bonus = 0
 
-        if hasattr(weapon, 'prof') and weapon.prof == '1':  # if need to add proficiency
-            attack_bonus += int(character.xml.profbonus)
-
-
-        if hasattr(weapon, 'properties') and 'finesse' in weapon.properties.lower():
-            attack_bonus += max(int(character.xml.abilities.strength.bonus),
-                                int(character.xml.abilities.dexterity.bonus))
-            damage_bonus += max(int(character.xml.abilities.strength.bonus),
-                                int(character.xml.abilities.dexterity.bonus))
-
-        elif hasattr(weapon, 'properties') and 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
-            attack_bonus += int(character.xml.abilities.dexterity.bonus)
-            damage_bonus += int(character.xml.abilities.dexterity.bonus)
-        elif hasattr(weapon, 'attackstat'):
-            attack_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
-            damage_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
-        else:
-            attack_bonus += int(character.xml.abilities.strength.bonus)
-            damage_bonus += int(character.xml.abilities.strength.bonus)
-
-        if hasattr(weapon, 'attackbonus'):
-            attack_bonus += int(weapon.attackbonus)
-
-        if hasattr(weapon.damagelist[0], 'bonus'):
-            damage_bonus += int(weapon.damagelist[0].bonus)
-
-        if damage_bonus > 0:
-            damage_bonus = '+' + str(damage_bonus)
-        elif damage_bonus == 0:
-            damage_bonus = ''
-        damage_dice_string = ''
-        damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
-        for unique_dice in set(damage_dice_list):
-            if damage_dice_list.count(unique_dice) == 1:
-                damage_dice_string += f'{unique_dice} + '
-            else:
-                damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice} + '
-
-        damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
-
-        write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
-        write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
-        write_in_pdf(f'{damage_dice_string}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
+        # if hasattr(weapon, 'properties') and 'finesse' in weapon.properties.lower():
+        #     attack_bonus += max(int(character.xml.abilities.strength.bonus),
+        #                         int(character.xml.abilities.dexterity.bonus))
+        #     damage_bonus += max(int(character.xml.abilities.strength.bonus),
+        #                         int(character.xml.abilities.dexterity.bonus))
+        #
+        # elif hasattr(weapon, 'properties') and 'range' in weapon.properties.lower() and '/' in weapon.properties.lower():
+        #     attack_bonus += int(character.xml.abilities.dexterity.bonus)
+        #     damage_bonus += int(character.xml.abilities.dexterity.bonus)
+        # elif hasattr(weapon, 'attackstat'):
+        #     attack_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
+        #     damage_bonus += int(getattr(character.xml.abilities, weapon.attackstat).bonus)
+        # else:
+        #     attack_bonus += int(character.xml.abilities.strength.bonus)
+        #     damage_bonus += int(character.xml.abilities.strength.bonus)
+        #
+        # if hasattr(weapon, 'attackbonus'):
+        #     attack_bonus += int(weapon.attackbonus)
+        #
+        # if hasattr(weapon.damagelist[0], 'bonus'):
+        #     damage_bonus += int(weapon.damagelist[0].bonus)
+        #
+        # if damage_bonus > 0:
+        #     damage_bonus = '+' + str(damage_bonus)
+        # elif damage_bonus == 0:
+        #     damage_bonus = ''
+        # damage_dice_string = ''
+        # damage_dice_list = weapon.damagelist[0].dice.split(',')  # type:list
+        # for unique_dice in set(damage_dice_list):
+        #     if damage_dice_list.count(unique_dice) == 1:
+        #         damage_dice_string += f'{unique_dice} + '
+        #     else:
+        #         damage_dice_string += f'{damage_dice_list.count(unique_dice)}{unique_dice} + '
+        #
+        # damage_dice_string = damage_dice_string[:-2]  # to cut plus and space in the end
+        #
+        # write_in_pdf(weapon.name, pdf, f'weapon{number}.name')
+        # write_in_pdf(str(attack_bonus), pdf, f'weapon{number}.attack')
+        # write_in_pdf(f'{damage_dice_string}{damage_bonus} {damage_type}', pdf, f'weapon{number}.damage')
 
     feature_list_position = 0
     for number, feature in enumerate(character.xml.featurelist, 1):
@@ -547,10 +547,13 @@ def get_overlay_canvas(character: "Character", skip_name=False) -> io.BytesIO:
                                  'UnderCommon': 'Глубинный Общий'}
 
     for number, language in enumerate(character.xml.languagelist, 1):
-        language_name = language.name.strip()
-        if language_name in language_translation_dict:
-            language_name = language_translation_dict[language_name]
-        write_in_pdf(f'{language_name} язык', pdf, f'language{number}')
+        try:
+            language_name = language.name.strip()
+            if language_name in language_translation_dict:
+                language_name = language_translation_dict[language_name]
+            write_in_pdf(f'{language_name} язык', pdf, f'language{number}')
+        except Exception as e:
+            print(e)
 
     pdf.save()
     data.seek(0)
@@ -665,4 +668,4 @@ class Character:
 
 
 if __name__ == '__main__':
-    run_pdf_creation('tormund9', skip_name=True)
+    run_pdf_creation('Yaga', skip_name=True)
