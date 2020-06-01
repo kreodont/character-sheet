@@ -38,34 +38,28 @@ class Field:
     alignment: str = 'center'  # left, right or center
     auto_fit_font_size: bool = True  # Should change font size to fit
 
-    def calculate_y(self):
-        if self.value.font_size:
-            font_size = self.value.font_size
-        else:
-            font_size = self.default_font_size
+    def calculate_y(self, font_size):
         return self.center_y - font_size // 4
 
-    def calculate_x(self):
-        if self.value.font_size:
-            font_size = self.value.font_size
-        else:
-            font_size = self.default_font_size
-
+    def calculate_x(self, font_size):
         return self.center_x - (font_size // 4) * len(str(self.value.value))
 
     def render(self, pdf):
         font_size = self.default_font_size
         if self.value.font_size:
             font_size = self.value.font_size
+        length_in_coordinates = font_size // 2 * len(str(self.value.value))
+        if length_in_coordinates > self.length and self.auto_fit_font_size:
+            font_size = int(font_size * (self.length / length_in_coordinates))
         # must have FreeSans.ttf in the same folder
         pdf.setFont('FreeSans', font_size)
         if self.alignment == 'center':
-            x = self.calculate_x()
+            x = self.calculate_x(font_size)
         else:
             x = self.center_x
         pdf.drawString(
             x=x,
-            y=self.calculate_y(),
+            y=self.calculate_y(font_size),
             text=self.value.value,
         )
 
@@ -79,9 +73,9 @@ class CharacterSheet:
     # upper righ corner coords are 593 ,790
     character_name: Field = Field(
         value=Value("Имя персонажа"),
-        default_font_size=50,
-        height=50,
-        length=100,
+        default_font_size=20,
+        height=20,
+        length=170,
         center_x=128,
         center_y=720,
     )
@@ -119,5 +113,8 @@ class CharacterSheet:
 
 if __name__ == '__main__':
     empty_sheet = CharacterSheet('empty.pdf')
-    empty_sheet.set_field(field_name="Имя персонажа", value='Чебурашка')
+    empty_sheet.set_field(
+        field_name="Имя персонажа",
+        value='Чебурашка',
+    )
     empty_sheet.render()
