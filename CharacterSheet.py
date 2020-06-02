@@ -24,6 +24,7 @@ class Value:
     font_size: int = 0  # zero, if use Field default
     value: str = ""  # Value, numeric or string
     explaination: str = ""  # Why this field has this value
+    english_name: str = ""  # Name translated into English
 
 
 @dataclass
@@ -50,7 +51,7 @@ class Field:
             font_size = self.value.font_size
         length_in_coordinates = font_size // 2 * len(str(self.value.value))
         if length_in_coordinates > self.length and self.auto_fit_font_size:
-            font_size = int(font_size * (self.length / length_in_coordinates))
+            font_size = font_size * (self.length / length_in_coordinates)
         # must have FreeSans.ttf in the same folder
         pdf.setFont('FreeSans', font_size)
         if self.alignment == 'center':
@@ -74,10 +75,142 @@ class CharacterSheet:
     character_name: Field = Field(
         value=Value("Имя персонажа"),
         default_font_size=20,
+        alignment='center',
+        auto_fit_font_size=True,
         height=20,
         length=170,
         center_x=128,
         center_y=720,
+    )
+
+    class_and_level: Field = Field(
+        value=Value("КЛАСС И УРОВЕНЬ"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=310,
+        center_y=735,
+    )
+
+    backstory: Field = Field(
+        value=Value("Предыстория"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=400,
+        center_y=735,
+    )
+
+    player_name: Field = Field(
+        value=Value("Имя игрока"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=510,
+        center_y=735,
+    )
+
+    race: Field = Field(
+        value=Value("Раса"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=310,
+        center_y=708,
+    )
+
+    alignment: Field = Field(
+        value=Value("Мировоззрение"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=400,
+        center_y=708,
+    )
+
+    experience: Field = Field(
+        value=Value("Опыт"),
+        default_font_size=8,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=80,
+        center_x=510,
+        center_y=708,
+    )
+
+    strength: Field = Field(
+        value=Value("Сила"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=597,
+    )
+
+    dexterity: Field = Field(
+        value=Value("Ловкость"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=525,
+    )
+
+    constitution: Field = Field(
+        value=Value("Телосложение"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=454,
+    )
+
+    intelligence: Field = Field(
+        value=Value("Интеллект"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=382,
+    )
+    wisdom: Field = Field(
+        value=Value("Мудрость"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=310,
+    )
+    charisma: Field = Field(
+        value=Value("Харизма"),
+        default_font_size=10,
+        alignment='center',
+        auto_fit_font_size=True,
+        height=5,
+        length=15,
+        center_x=55,
+        center_y=238,
     )
 
     def set_field(self, *, field_name: str, value, override_font_size: int = 0):
@@ -117,4 +250,64 @@ if __name__ == '__main__':
         field_name="Имя персонажа",
         value='Чебурашка',
     )
+    empty_sheet.set_field(
+        field_name="Класс и уровень",
+        value='Колдун 1',
+    )
+
+    empty_sheet.set_field(
+        field_name="Предыстория",
+        value='Отшельник',
+    )
+
+    empty_sheet.set_field(
+        field_name="Имя игрока",
+        value='Губка Боб',
+    )
+
+    empty_sheet.set_field(
+        field_name="Раса",
+        value='Полурослик',
+    )
+
+    empty_sheet.set_field(
+        field_name="Мировоззрение",
+        value='Законно добрый',
+    )
+
+    empty_sheet.set_field(
+        field_name="Опыт",
+        value='',
+    )
+
+    empty_sheet.set_field(
+        field_name="Сила",
+        value='16',
+    )
+
+    empty_sheet.set_field(
+        field_name="Ловкость",
+        value='20',
+    )
+
+    empty_sheet.set_field(
+        field_name="Телосложение",
+        value='0',
+    )
+
+    empty_sheet.set_field(
+        field_name="Интеллект",
+        value='100',
+    )
+
+    empty_sheet.set_field(
+        field_name="Мудрость",
+        value='-5',
+    )
+
+    empty_sheet.set_field(
+        field_name="Харизма",
+        value='6',
+    )
+
     empty_sheet.render()
